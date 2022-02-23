@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import { EXTENSION_NAME, IS_CODESPACE } from "./constants";
 import { createFiles } from "./files";
 import { createTerminals } from "./terminals";
+import * as child_process from "child_process";
 
 const HAS_LAYOUT_CONTEXT_KEY = `${EXTENSION_NAME}:hasLayout`;
 const HAS_RUN_CONTEXT_KEY = `${EXTENSION_NAME}:hasRun`;
@@ -59,6 +60,7 @@ export async function prepareLayout(memento: vscode.Memento) {
     }
 
     const isActivation = memento;
+    const isCodespaceActivation = isActivation && IS_CODESPACE;
 
     // We want to reset the layout in two cases:
     // 1) This is an explicit reset request (as opposed to an activation)
@@ -67,14 +69,19 @@ export async function prepareLayout(memento: vscode.Memento) {
     //    that is automatically launched on behalf of the user.
     const resetLayout = !isActivation || !IS_CODESPACE;
 
-    // Since Codespaces launches a default terminal, we want to
-    // delay the layout on activations, in order to prevent clashes.
-    const delay = isActivation && IS_CODESPACE ? 5000 : 0;
-
     setTimeout(() => {
-      createFiles(devcontainer.workspace, resetLayout);
-      createTerminals(devcontainer.workspace, resetLayout);
-    }, delay);
+      if (devcontainer.workspace.files) {
+        createFiles(devcontainer.workspace.files, resetLayout);
+      }
+
+      if (devcontainer.workspace.terminals) {
+        if (isCodespaceActivation) {
+          child_process.execSync("touch $HOME/.config/vscode-dev-containers/first-run-notice-already-displayed");
+        }
+
+        createTerminals(devcontainer.workspace.terminals, resetLayout);
+      }
+    }, isCodespaceActivation ? 4000: 0);
   } catch {
     console.error("Workspace layout configuration appears to be invalid JSON.");
   }

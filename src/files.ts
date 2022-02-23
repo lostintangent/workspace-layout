@@ -18,11 +18,7 @@ async function openFile(
   });
 }
 
-export async function createFiles(config: GalleryConfiguration, resetLayout: boolean) {
-  if (!config.files) {
-    return;
-  }
-
+export async function createFiles(files: string[], resetLayout: boolean) {
   if (resetLayout) {
     await vscode.commands.executeCommand("workbench.action.closeAllEditors");
   }
@@ -30,8 +26,8 @@ export async function createFiles(config: GalleryConfiguration, resetLayout: boo
   let viewColumn = 1;
   let activeEditor;
 
-  for (let i = 0; i < config.files.length; i++) {
-    const fileGroup = config.files[i];
+  for (let i = 0; i < files.length; i++) {
+    const fileGroup = files[i];
 
     if (Array.isArray(fileGroup)) {
       fileGroup.reverse();

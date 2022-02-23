@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { GalleryConfiguration, GalleryTerminal } from "./types";
+import { GalleryConfiguration, GalleryTerminal, GalleryTerminalGroup } from "./types";
 
 const COLOR_PREFIX = "terminal.ansi";
 
@@ -35,11 +35,7 @@ async function createTerminal(config: GalleryTerminal) {
   return terminal;
 }
 
-export async function createTerminals(config: GalleryConfiguration, resetLayout: boolean) {
-  if (!config.terminals) {
-    return;
-  }
-
+export async function createTerminals(terminals: GalleryTerminalGroup[], resetLayout: boolean) {
   if (resetLayout) {
     for (const terminal of vscode.window.terminals) {
       terminal.dispose();
@@ -47,7 +43,7 @@ export async function createTerminals(config: GalleryConfiguration, resetLayout:
   }
 
   let activeTerminal: vscode.Terminal | undefined;
-  for (let terminalGroup of config.terminals) {
+  for (let terminalGroup of terminals) {
     if (Array.isArray(terminalGroup)) {
       terminalGroup.reverse();
 

@@ -1,3 +1,7 @@
+## v0.0.4 (02/24/22)
+
+- Supressing the Codespaces "welcome mat" when creating new terminals
+
 ## v0.0.3 (02/23/22)
 
 - Fixing the auto-layout behavior within a Codespace
