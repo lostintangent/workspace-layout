@@ -58,8 +58,10 @@ export async function prepareLayout(memento: vscode.Memento) {
       await memento.update(HAS_RUN_CONTEXT_KEY, true);
     }
 
-    createFiles(devcontainer.workspace);
-    createTerminals(devcontainer.workspace);
+    setTimeout(() => {
+      createFiles(devcontainer.workspace);
+      createTerminals(devcontainer.workspace);
+    }, 3000);
   } catch {
     console.error("Workspace layout configuration appears to be invalid JSON.");
   }

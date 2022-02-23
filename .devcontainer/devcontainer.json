@@ -1,7 +1,15 @@
 {
-  "extensions": ["lostintangent.workspace-layout"],
+  "extensions": [
+    "lostintangent.workspace-layout"
+  ],
   "workspace": {
-    "files": [["src/extension.ts", "src/types.ts"], ".devcontainer.json"],
+    "files": [
+      [
+        "src/extension.ts",
+        "src/types.ts"
+      ],
+      ".devcontainer/devcontainer.json"
+    ],
     "terminals": [
       "echo one",
       {
