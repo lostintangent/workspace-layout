@@ -1,4 +1,5 @@
 {
+  "extensions": ["lostintangent.workspace-layout"],
   "workspace": {
     "files": [["src/extension.ts", "src/types.ts"], ".devcontainer.json"],
     "terminals": [
