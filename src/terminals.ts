@@ -35,13 +35,15 @@ async function createTerminal(config: GalleryTerminal) {
   return terminal;
 }
 
-export async function createTerminals(config: GalleryConfiguration) {
+export async function createTerminals(config: GalleryConfiguration, resetLayout: boolean) {
   if (!config.terminals) {
     return;
   }
 
-  for (const terminal of vscode.window.terminals) {
-    terminal.dispose();
+  if (resetLayout) {
+    for (const terminal of vscode.window.terminals) {
+      terminal.dispose();
+    }
   }
 
   let activeTerminal: vscode.Terminal | undefined;

@@ -18,12 +18,14 @@ async function openFile(
   });
 }
 
-export async function createFiles(config: GalleryConfiguration) {
+export async function createFiles(config: GalleryConfiguration, resetLayout: boolean) {
   if (!config.files) {
     return;
   }
 
-  await vscode.commands.executeCommand("workbench.action.closeAllEditors");
+  if (resetLayout) {
+    await vscode.commands.executeCommand("workbench.action.closeAllEditors");
+  }
 
   let viewColumn = 1;
   let activeEditor;

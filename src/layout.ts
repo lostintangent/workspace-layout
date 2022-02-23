@@ -1,6 +1,6 @@
 import { TextDecoder } from "util";
 import * as vscode from "vscode";
-import { EXTENSION_NAME } from "./constants";
+import { EXTENSION_NAME, IS_CODESPACE } from "./constants";
 import { createFiles } from "./files";
 import { createTerminals } from "./terminals";
 
@@ -58,10 +58,23 @@ export async function prepareLayout(memento: vscode.Memento) {
       await memento.update(HAS_RUN_CONTEXT_KEY, true);
     }
 
+    const isActivation = memento;
+
+    // We want to reset the layout in two cases:
+    // 1) This is an explicit reset request (as opposed to an activation)
+    // 2) This is an activiation, but not within a IS_CODESPACE. In the case
+    //    of Codespaces, we don't want to remove the setup terminal or README
+    //    that is automatically launched on behalf of the user.
+    const resetLayout = !isActivation || !IS_CODESPACE;
+
+    // Since Codespaces launches a default terminal, we want to
+    // delay the layout on activations, in order to prevent clashes.
+    const delay = isActivation && IS_CODESPACE ? 2000 : 0;
+
     setTimeout(() => {
-      createFiles(devcontainer.workspace);
-      createTerminals(devcontainer.workspace);
-    }, 3000);
+      createFiles(devcontainer.workspace, resetLayout);
+      createTerminals(devcontainer.workspace, resetLayout);
+    }, delay);
   } catch {
     console.error("Workspace layout configuration appears to be invalid JSON.");
   }
