@@ -1,0 +1,24 @@
+{
+  "workspace": {
+    "files": [["src/extension.ts", "src/types.ts"], ".devcontainer.json"],
+    "terminals": [
+      "echo one",
+      {
+        "name": "Foo",
+        "command": "echo four",
+        "color": "green",
+        "icon": "account"
+      },
+      [
+        {
+          "name": "Bar",
+          "color": "blue",
+          "active": true,
+          "icon": "bug",
+          "message": "This is the active terminal!"
+        },
+        "echo three"
+      ]
+    ]
+  }
+}
