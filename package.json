@@ -1,10 +1,10 @@
 {
   "name": "workspace-layout",
   "displayName": "Workspace Layout",
-  "description": "VS Code extension that allows you to configure a workspace's layout (e.g. terminals, files) as a compliment to GitHub Codespaces",
+  "description": "VS Code extension that allows you to configure a workspace's layout (e.g. terminals, files), as a compliment to GitHub Codespaces",
   "publisher": "lostintangent",
   "icon": "images/icon.png",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.64.0"
   },

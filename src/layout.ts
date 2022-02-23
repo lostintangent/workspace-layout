@@ -69,7 +69,7 @@ export async function prepareLayout(memento: vscode.Memento) {
 
     // Since Codespaces launches a default terminal, we want to
     // delay the layout on activations, in order to prevent clashes.
-    const delay = isActivation && IS_CODESPACE ? 2000 : 0;
+    const delay = isActivation && IS_CODESPACE ? 5000 : 0;
 
     setTimeout(() => {
       createFiles(devcontainer.workspace, resetLayout);

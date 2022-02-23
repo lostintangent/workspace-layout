@@ -1,3 +1,7 @@
+## v0.0.3 (02/23/22)
+
+- Fixing the auto-layout behavior within a Codespace
+
 ## v0.0.2 (02/23/22)
 
 - Detecting whether you're in a Codespace, and if so, don't auto-close files/terminals on launch
