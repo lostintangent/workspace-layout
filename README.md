@@ -4,6 +4,8 @@ The _Workspace Layout_ extension allows a workspace to configure the set of [ter
 
 In fact, in order to start configuring a workspace's layout, simply create a `devcontainer.json` file, that specifies a `workspace.files` and/or `workspace.terminals` property. If you're already using GitHub Codespaces or [VS Code Remote Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers), you can add these properties to your existing `devcontainer.json` file, and add `lostintangent.workspace-layout` to the `extensions` list, in order to automatically install it, and apply the desired layout for subsequent users.
 
+<img width="750px" src="https://user-images.githubusercontent.com/116461/155415211-94d48e4b-57e9-4956-9876-5946a12a6cb6.png" />
+
 ### Sample Layout Configuration
 
 The following is an example `devcontainer.json` file, that illustrates the various configuration options that the _Workspace Layout_ extension supports. For more details about the behavior/properties, see the [terminal](#terminals) and [file](#files) reference information below:
