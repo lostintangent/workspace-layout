@@ -68,6 +68,17 @@ export async function prepareLayout(memento: vscode.Memento) {
       }
 
       if (workspaceConfig.terminals) {
+        if (!vscode.workspace.isTrusted) {
+          // Wait for the user to grant trust to the workspace,
+          // before attempting to launch any configured terminals.
+          const trustHandler = vscode.workspace.onDidGrantWorkspaceTrust(() => {
+            createTerminals(workspaceConfig.terminals);
+            trustHandler.dispose();
+          });
+
+          return;
+        }
+
         if (isCodespaceActivation) {
           child_process.execSync("touch $HOME/.config/vscode-dev-containers/first-run-notice-already-displayed");
         }

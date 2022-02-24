@@ -104,3 +104,7 @@ In addition to opening files, you can also indicate whether to select a group of
 In order to respect user preference, a configured workspace is only automatically launched the first time that you open each workspace (or each time you create a Codespace for the repo). From then on, VS Code will respect the workspace layout, and therefore, if you want to close a file/terminal, and/or re-arrange things, then your preference will persist across sessions.
 
 However, if you accidentally close a file/terminal, and you'd like to return back to the original workspace layout, you can simply run the `Reset Workspace Layout` command.
+
+## Workspace Trust
+
+If you open a workspace that isn't [trusted](https://code.visualstudio.com/docs/editor/workspace-trust), then _Workspace Layout_ will attempt to restore any configured files, but it won't launch any terminals. The later could pose a security risk (since it can execute shell commands!), and therefore, is explicitly disabled in untrustworthy workspaces. Once you trust a workspace, it's terminals will be launched as expected. This way, you have the benefits of a fully-configured workspace experience, but without compromising on security.

@@ -1,3 +1,7 @@
+## v0.0.6 (02/23/22)
+
+- Added proper support for untrusted workspaces (e.g. terminals aren't launched)
+
 ## v0.0.5 (02/23/22)
 
 - Added support for specifying a line selection for files

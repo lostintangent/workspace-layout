@@ -29,6 +29,12 @@
       }
     ]
   },
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "Can open configured workspace files, but terminals are only supported within trusted workspaces."
+    }
+  },
   "scripts": {
     "vscode:prepublish": "yarn run package",
     "compile": "webpack",
