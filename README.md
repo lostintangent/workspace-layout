@@ -31,7 +31,7 @@ The following is an example `devcontainer.json` file, that illustrates the vario
         "icon": "bug"
       },
       [
-        // Group one or more terminals into a split termianl group
+        // Group one or more terminals into a split terminal group
         {
           "name": "Foo", // Terminals can be created without a default command
           "icon": "account"
@@ -65,7 +65,7 @@ When a terminal is specified as a string value, it's contents are interpreted as
 
 ### Split Terminal Groups
 
-If you'd like to configure a group of split terminals, then simpyl group one or more terminal configurations into a nested array. And all siblings in that array will be grouped together.
+If you'd like to configure a group of split terminals, then simply group one or more terminal configurations into a nested array and all siblings in that array will be grouped together.
 
 For example, the following config will create three tabbed terminals:
 
@@ -83,7 +83,7 @@ Whereas, the following would group the first two terminals into a split-terminal
 
 The `files` property indicates one or more workspace files that should be automatically opened. This property accepts an array of strings, that represents the ordered set of relative paths to open (e.g. `src/foo.ts`).
 
-By default, the specified files will be opened as seperate tabs within the same editor group. However, if you'd like to group together one or more files, then simply specify the groups using a nested array. For example, the following config will open three tabbed files:
+By default, the specified files will be opened as separate tabs within the same editor group. However, if you'd like to group together one or more files, then simply specify the groups using a nested array. For example, the following config will open three tabbed files:
 
 ```json
 "files": ["src/foo.ts", "src/bar.ts", "src/baz.ts"]
