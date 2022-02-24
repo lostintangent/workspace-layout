@@ -3,6 +3,7 @@
     "lostintangent.workspace-layout"
   ],
   "workspace": {
+    "view": "readme",
     "files": [
       [
         "src/extension.ts:10",

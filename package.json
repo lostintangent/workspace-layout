@@ -4,7 +4,7 @@
   "description": "VS Code extension that allows you to configure a workspace's layout (e.g. terminals, files), as a compliment to GitHub Codespaces",
   "publisher": "lostintangent",
   "icon": "images/icon.png",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "engines": {
     "vscode": "^1.64.0"
   },
@@ -26,8 +26,42 @@
         "command": "workspace-layout.resetLayout",
         "enablement": "workspace-layout:hasLayout",
         "title": "Reset Workspace Layout"
+      },
+      {
+        "command": "workspace-layout.closeReadme",
+        "enablement": "workspace-layout:showReadme",
+        "title": "Close Readme",
+        "icon": "$(close)"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "workspace-layout",
+          "title": "Workspace",
+          "icon": "$(book)"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "workspace-layout.closeReadme",
+          "group": "navigation@1",
+          "when": "view == workspace-layout.readme"
+        }
+      ]
+    },
+    "views": {
+      "workspace-layout": [
+        {
+          "id": "workspace-layout.readme",
+          "name": "Readme",
+          "type": "webview",
+          "when": "workspace-layout:showReadme"
+        }
+      ]
+    }
   },
   "capabilities": {
     "untrustedWorkspaces": {
@@ -56,5 +90,8 @@
     "vsce": "^2.6.7",
     "webpack": "^5.52.1",
     "webpack-cli": "^4.8.0"
+  },
+  "dependencies": {
+    "markdown-it": "^12.3.2"
   }
 }

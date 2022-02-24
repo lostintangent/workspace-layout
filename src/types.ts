@@ -15,6 +15,7 @@ export type GalleryTerminalGroup =
   | (GalleryTerminal | string)[];
 
 export interface GalleryConfiguration {
+  view?: string;
   files?: string[];
   terminals?: GalleryTerminalGroup[];
 }

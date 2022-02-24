@@ -1,5 +1,7 @@
-## v0.0.6 (02/23/22)
+## v0.0.6 (02/24/22)
 
+- Introduced the `view` property, to allow configuring the default view to focus
+- Introduce the support for displaying a readme in the sidebar, which can be activated by setting `view` to `readme`
 - Added proper support for untrusted workspaces (e.g. terminals aren't launched)
 
 ## v0.0.5 (02/23/22)

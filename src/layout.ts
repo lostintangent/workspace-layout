@@ -62,9 +62,26 @@ export async function prepareLayout(memento: vscode.Memento) {
     const isCodespaceActivation = memento && IS_CODESPACE;
     const workspaceConfig = devcontainer.workspace;
     
-    setTimeout(() => {
+    setTimeout(async () => {
       if (workspaceConfig.files) {
         createFiles(workspaceConfig.files);
+      }
+
+      if (workspaceConfig.view) {
+        try {
+          let view = workspaceConfig.view
+          if (view === "readme") {
+            view = "workspace-layout.readme";
+          }
+          
+          if (view === "workspace-layout.readme") {
+            await vscode.commands.executeCommand("setContext", "workspace-layout:showReadme", true)
+          }
+          
+          vscode.commands.executeCommand(`${view}.focus`);
+        } catch {
+          console.error("The configured view wasn't found: ", workspaceConfig.view)
+        }
       }
 
       if (workspaceConfig.terminals) {

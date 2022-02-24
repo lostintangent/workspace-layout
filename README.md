@@ -1,8 +1,8 @@
 # 🖼️ Workspace Layout
 
-The _Workspace Layout_ extension allows a workspace to configure the set of [terminals](#terminals) and/or [files](#files) that should be automatically opened, whenever someone launches the workspace within VS Code and/or GitHub Codespaces. This allows a repo maintainer to provide a highly curated one-click/onboarding experience, using a config-as-code solution, that builds upon the existing semantics of [`devcontainer.json`](https://code.visualstudio.com/docs/remote/devcontainerjson-reference).
+The _Workspace Layout_ extension allows a workspace to configure the set of [terminals](#terminals)/[files](#files) that should be automatically opened, and the [view](#view) that should be focused, whenever someone launches the workspace within VS Code and/or GitHub Codespaces. This allows a repo maintainer to provide a highly curated one-click/onboarding experience, that builds upon the existing semantics of [`devcontainer.json`](https://code.visualstudio.com/docs/remote/devcontainerjson-reference).
 
-In fact, in order to start configuring a workspace's layout, simply create a `devcontainer.json` file, that specifies a `workspace.files` and/or `workspace.terminals` property. If you're already using GitHub Codespaces or [VS Code Remote Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers), you can add these properties to your existing `devcontainer.json` file, and add `lostintangent.workspace-layout` to the `extensions` list, in order to automatically install it, and apply the desired layout for subsequent users.
+In fact, in order to start configuring a workspace's layout, simply create a `devcontainer.json` file, that specifies a `workspace.view`, `workspace.files` and/or `workspace.terminals` property. If you're already using GitHub Codespaces or [VS Code Remote Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers), you can add these properties to your existing `devcontainer.json` file, and add `lostintangent.workspace-layout` to the `extensions` list, in order to automatically install it, and apply the desired layout for subsequent users.
 
 <img width="750px" src="https://user-images.githubusercontent.com/116461/155415211-94d48e4b-57e9-4956-9876-5946a12a6cb6.png" />
 
@@ -13,6 +13,7 @@ The following is an example `devcontainer.json` file, that illustrates the vario
 ```json
 {
   "workspace": {
+    "view": "readme", // Displays the project's readme in a sidebar
     "files": [
       "package.json", // Specify an array of files you'd like to auto-open
       "LICENSE",
@@ -98,6 +99,10 @@ Whereas, the following would group the first two files into an editor group, and
 ### Selection
 
 In addition to opening files, you can also indicate whether to select a group of lines within a file, by appending `:<startLine>-<endLine>` to the file path (e.g. `foo.ts:10-30`). The ending line is optional, and if you omit it, then only a single line will be selected. Both the start and end lines are specified as 1-based integers, and so you can specify the line numbers as you see them within VS Code.
+
+## View
+
+If you'd like to control the view that should be displayed by default, you can set the `workspace.view` property to the ID of the view you'd like to display. This can refer to either a VS Code built-in view (e.g. the debugger, SCM tab), or a view that's contributed by an extension. Additionally, the Workspace Layout extension contributes a special view type called `readme`, which will render the workspace's `README.md` file in a side bar. This can be useful if you'd like to display the readme to the left of your default files/terminals, but extend the full height of the editor.
 
 ## Resetting Layout
 
