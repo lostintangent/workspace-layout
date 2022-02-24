@@ -5,10 +5,10 @@
   "workspace": {
     "files": [
       [
-        "src/extension.ts",
+        "src/extension.ts:10",
         "src/types.ts"
       ],
-      ".devcontainer/devcontainer.json"
+      ".devcontainer/devcontainer.json:13-31"
     ],
     "terminals": [
       "echo one",

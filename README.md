@@ -16,7 +16,10 @@ The following is an example `devcontainer.json` file, that illustrates the vario
     "files": [
       "package.json", // Specify an array of files you'd like to auto-open
       "LICENSE",
-      ["src/extension.ts", "src/types.ts"] // Group one or more files into a distinct editor group
+      [  // Group one or more files into a distinct editor group
+        "src/extension.ts",
+        "src/types.ts:10-20" // Select lines 10-20 in the file
+      ]
     ],
     "terminals": [
       "echo one", // Specify just a command (no name/etc.)
@@ -91,6 +94,10 @@ Whereas, the following would group the first two files into an editor group, and
 ```json
 "files": [["src/foo.ts", "src/bar.ts"], "src/baz.ts"]
 ```
+
+### Selection
+
+In addition to opening files, you can also indicate whether to select a group of lines within a file, by appending `:<startLine>-<endLine>` to the file path (e.g. `foo.ts:10-30`). The ending line is optional, and if you omit it, then only a single line will be selected. Both the start and end lines are specified as 1-based integers, and so you can specify the line numbers as you see them within VS Code.
 
 ## Resetting Layout
 

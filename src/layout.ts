@@ -59,29 +59,22 @@ export async function prepareLayout(memento: vscode.Memento) {
       await memento.update(HAS_RUN_CONTEXT_KEY, true);
     }
 
-    const isActivation = memento;
-    const isCodespaceActivation = isActivation && IS_CODESPACE;
-
-    // We want to reset the layout in two cases:
-    // 1) This is an explicit reset request (as opposed to an activation)
-    // 2) This is an activiation, but not within a IS_CODESPACE. In the case
-    //    of Codespaces, we don't want to remove the setup terminal or README
-    //    that is automatically launched on behalf of the user.
-    const resetLayout = !isActivation || !IS_CODESPACE;
-
+    const isCodespaceActivation = memento && IS_CODESPACE;
+    const workspaceConfig = devcontainer.workspace;
+    
     setTimeout(() => {
-      if (devcontainer.workspace.files) {
-        createFiles(devcontainer.workspace.files, resetLayout);
+      if (workspaceConfig.files) {
+        createFiles(workspaceConfig.files);
       }
 
-      if (devcontainer.workspace.terminals) {
+      if (workspaceConfig.terminals) {
         if (isCodespaceActivation) {
           child_process.execSync("touch $HOME/.config/vscode-dev-containers/first-run-notice-already-displayed");
         }
 
-        createTerminals(devcontainer.workspace.terminals, resetLayout);
+        createTerminals(workspaceConfig.terminals);
       }
-    }, isCodespaceActivation ? 4000: 0);
+    }, isCodespaceActivation ? 5000: 0);
   } catch {
     console.error("Workspace layout configuration appears to be invalid JSON.");
   }

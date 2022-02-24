@@ -1,4 +1,8 @@
-## v0.0.4 (02/24/22)
+## v0.0.5 (02/23/22)
+
+- Added support for specifying a line selection for files
+
+## v0.0.4 (02/23/22)
 
 - Supressing the Codespaces "welcome mat" when creating new terminals
 

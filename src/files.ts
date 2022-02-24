@@ -6,22 +6,28 @@ async function openFile(
   viewColumn: vscode.ViewColumn,
   preserveFocus: boolean = true
 ) {
+  const [path, range] = file.split(":");
   const fileUri = vscode.Uri.joinPath(
     vscode.workspace.workspaceFolders![0].uri,
-    file
+    path
   );
+
+  let selection: vscode.Range | undefined;
+  if (range) {
+    const [startLine, endLine = startLine] = range.split("-");
+    selection = new vscode.Range(Number(startLine) - 1, 0, Number(endLine) - 1, 1000);
+  }
 
   return await vscode.window.showTextDocument(fileUri, {
     preview: false,
     preserveFocus,
     viewColumn,
+    selection
   });
 }
 
-export async function createFiles(files: string[], resetLayout: boolean) {
-  if (resetLayout) {
-    await vscode.commands.executeCommand("workbench.action.closeAllEditors");
-  }
+export async function createFiles(files: string[]) {
+  await vscode.commands.executeCommand("workbench.action.closeAllEditors");
 
   let viewColumn = 1;
   let activeEditor;
