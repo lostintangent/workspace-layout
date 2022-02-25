@@ -1,3 +1,7 @@
+## v0.0.7 (02/24/22)
+
+- Fixed image rendering in the sidebar readme
+
 ## v0.0.6 (02/24/22)
 
 - Introduced the `view` property, to allow configuring the default view to focus
