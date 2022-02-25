@@ -10,14 +10,28 @@ export async function activate(context: vscode.ExtensionContext) {
 
   vscode.window.registerWebviewViewProvider("workspace-layout.readme", {
     resolveWebviewView: async (webView) => {
+      webView.webview.options = {
+        enableCommandUris: true,
+        enableScripts: true,
+        localResourceRoots: [vscode.workspace.workspaceFolders![0].uri]
+      };
+
       const readmeUri = vscode.Uri.joinPath(vscode.workspace.workspaceFolders![0].uri, "README.md");
       const bytes = await vscode.workspace.fs.readFile(readmeUri);
       const contents = new TextDecoder().decode(bytes);
 
       const md = require("markdown-it")();
-      webView.webview.html = md.render(contents)
-    }
-  });
+      const html = md.render(contents);
+
+      webView.webview.html = `<html>
+<head>
+      <base href="${webView.webview.asWebviewUri(readmeUri)}" />
+</head>
+<body>
+${html}
+</body>
+</html>`
+    }});
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
