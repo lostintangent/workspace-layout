@@ -62,7 +62,28 @@ export async function prepareLayout(memento: vscode.Memento) {
     }
 
     const isCodespaceActivation = memento && IS_CODESPACE;
-    const workspaceConfig = settings.workspace;
+    let workspaceConfig = settings.workspace;
+
+    // Sensible defaults
+    if (workspaceConfig === true) {
+      workspaceConfig = {
+        "view": "readme",
+        "files": [],
+        "terminals": [""]
+      };
+    }
+    else {
+      if (!("view" in workspaceConfig)) {
+        workspaceConfig.view = "readme";
+      }
+      if (!("files" in workspaceConfig)) {
+        workspaceConfig.files = [];
+      }
+      if (!("terminals" in workspaceConfig)) {
+        workspaceConfig.terminals = [""];
+      }
+
+    }
 
     setTimeout(async () => {
       if (workspaceConfig.files) {
