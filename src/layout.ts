@@ -75,6 +75,9 @@ export async function prepareLayout(memento: vscode.Memento) {
       if (!("terminals" in workspaceConfig)) {
         workspaceConfig.terminals = [""];
       }
+      if (!("browser" in workspaceConfig)) {
+        workspaceConfig.browser = null;
+      }
     }
 
     setTimeout(async () => {
