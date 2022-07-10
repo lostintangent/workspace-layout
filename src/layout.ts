@@ -52,13 +52,6 @@ export async function prepareLayout(memento: vscode.Memento) {
         HAS_LAYOUT_CONTEXT_KEY,
         true
       );
-
-      const hasRun = memento.get(HAS_RUN_CONTEXT_KEY, false);
-      if (hasRun) {
-        return;
-      }
-
-      await memento.update(HAS_RUN_CONTEXT_KEY, true);
     }
 
     const isCodespaceActivation = memento && IS_CODESPACE;
@@ -96,11 +89,6 @@ export async function prepareLayout(memento: vscode.Memento) {
           if (view === "readme") {
             view = "workspace-layout.readme";
           }
-
-          if (view === "workspace-layout.readme") {
-            await vscode.commands.executeCommand("setContext", "workspace-layout:showReadme", true);
-          }
-
           vscode.commands.executeCommand(`${view}.focus`);
         } catch {
           console.error("The configured view wasn't found: ", workspaceConfig.view);

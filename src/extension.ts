@@ -54,13 +54,6 @@ ${html}
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      `${EXTENSION_NAME}.closeReadme`,
-      () => vscode.commands.executeCommand("setContext", "workspace-layout:showReadme", false)
-    )
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
       `${EXTENSION_NAME}.resetLayout`,
       prepareLayout
     )
