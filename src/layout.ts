@@ -9,7 +9,8 @@ import * as child_process from "child_process";
 const HAS_LAYOUT_CONTEXT_KEY = `${EXTENSION_NAME}:hasLayout`;
 const HAS_RUN_CONTEXT_KEY = `${EXTENSION_NAME}:hasRun`;
 
-const devcontainerPaths = [
+const settingsPaths = [
+  ".vscode/settings.json",
   ".devcontainer.json",
   ".devcontainer/devcontainer.json",
 ];
@@ -17,22 +18,22 @@ const devcontainerPaths = [
 export async function prepareLayout(memento: vscode.Memento) {
   const workspaceFolder = vscode.workspace.workspaceFolders![0];
 
-  let devcontainerUri: vscode.Uri | undefined;
-  for (let devcontainerPath of devcontainerPaths) {
-    const uri = vscode.Uri.joinPath(workspaceFolder.uri, devcontainerPath);
+  let settingsUri: vscode.Uri | undefined;
+  for (let settingsPath of settingsPaths) {
+    const uri = vscode.Uri.joinPath(workspaceFolder.uri, settingsPath);
 
     try {
       await vscode.workspace.fs.stat(uri);
-      devcontainerUri = uri;
+      settingsUri = uri;
       break;
     } catch { }
   }
 
-  if (!devcontainerUri) {
+  if (!settingsUri) {
     return;
   }
 
-  const fileBytes = await vscode.workspace.fs.readFile(devcontainerUri);
+  const fileBytes = await vscode.workspace.fs.readFile(settingsUri);
   const fileContents = new TextDecoder().decode(fileBytes);
 
   if (!fileContents) {
@@ -40,8 +41,8 @@ export async function prepareLayout(memento: vscode.Memento) {
   }
 
   try {
-    const devcontainer = parse(fileContents);
-    if (!devcontainer.workspace) {
+    const settings = parse(fileContents);
+    if (!settings.workspace) {
       return;
     }
 
@@ -61,7 +62,7 @@ export async function prepareLayout(memento: vscode.Memento) {
     }
 
     const isCodespaceActivation = memento && IS_CODESPACE;
-    const workspaceConfig = devcontainer.workspace;
+    const workspaceConfig = settings.workspace;
 
     setTimeout(async () => {
       if (workspaceConfig.files) {
@@ -70,18 +71,18 @@ export async function prepareLayout(memento: vscode.Memento) {
 
       if (workspaceConfig.view) {
         try {
-          let view = workspaceConfig.view
+          let view = workspaceConfig.view;
           if (view === "readme") {
             view = "workspace-layout.readme";
           }
 
           if (view === "workspace-layout.readme") {
-            await vscode.commands.executeCommand("setContext", "workspace-layout:showReadme", true)
+            await vscode.commands.executeCommand("setContext", "workspace-layout:showReadme", true);
           }
 
           vscode.commands.executeCommand(`${view}.focus`);
         } catch {
-          console.error("The configured view wasn't found: ", workspaceConfig.view)
+          console.error("The configured view wasn't found: ", workspaceConfig.view);
         }
       }
 
