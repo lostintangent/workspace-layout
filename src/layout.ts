@@ -75,14 +75,9 @@ export async function prepareLayout(memento: vscode.Memento) {
       if (!("terminals" in workspaceConfig)) {
         workspaceConfig.terminals = [""];
       }
-
     }
 
     setTimeout(async () => {
-      if (workspaceConfig.files) {
-        createFiles(workspaceConfig.files);
-      }
-
       if (workspaceConfig.view) {
         try {
           let view = workspaceConfig.view;
@@ -103,15 +98,35 @@ export async function prepareLayout(memento: vscode.Memento) {
             createTerminals(workspaceConfig.terminals);
             trustHandler.dispose();
           });
-
           return;
         }
-
         if (isCodespaceActivation) {
           child_process.execSync("touch $HOME/.config/vscode-dev-containers/first-run-notice-already-displayed");
         }
-
         createTerminals(workspaceConfig.terminals);
+
+        if (workspaceConfig.files) {
+          await createFiles(workspaceConfig.files);
+        }
+
+        if (workspaceConfig.browser) {
+          // Create a temporary document in a new column, since Simple Browser
+          // ends up in vscode.ViewColumn.Active
+          const document = await vscode.workspace.openTextDocument();
+          let editor = await vscode.window.showTextDocument(document, {
+            preserveFocus: false,
+            viewColumn: vscode.ViewColumn.Beside
+          });
+          await vscode.commands.executeCommand("simpleBrowser.show", workspaceConfig.browser);
+          await vscode.window.tabGroups.close(vscode.window.tabGroups.activeTabGroup.tabs[0]);
+        }
+
+        // Activate first editor in each group, from right to left
+        for (let i = vscode.window.tabGroups.all.length - 1; i >= 0; i--) {
+          const tabGroup = vscode.window.tabGroups.all[i];
+          const input = tabGroup.tabs[0].input as vscode.TabInputText;
+          vscode.window.showTextDocument(input.uri, { viewColumn: i + 1 });
+        }
       }
     }, isCodespaceActivation ? 5000 : 0);
   } catch {

@@ -26,19 +26,11 @@ export async function createFiles(files: Array<any>) {
   await vscode.commands.executeCommand("workbench.action.closeAllEditors");
 
   const groups = toArrayOfArrays(files);
-  const activeEditors = [];
   for (let i = 0; i < groups.length; i++) {
+    const editors = [];
     for (let j = 0; j < groups[i].length; j++) {
-      const editor = await openFile(groups[i][j], i + 1);
-      if (j === 0) {
-        activeEditors.push(editor);
-      }
+      await openFile(groups[i][j], i + 1);
     }
-  }
-
-  // Activate first editor in each group, from right to left
-  for (let i = activeEditors.length - 1; i >= 0; i--) {
-    vscode.window.showTextDocument(activeEditors[i].document, i + 1);
   }
 }
 
