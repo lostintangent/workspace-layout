@@ -1,3 +1,4 @@
+import { parse } from "jsonc-parser";
 import { TextDecoder } from "util";
 import * as vscode from "vscode";
 import { EXTENSION_NAME, IS_CODESPACE } from "./constants";
@@ -24,7 +25,7 @@ export async function prepareLayout(memento: vscode.Memento) {
       await vscode.workspace.fs.stat(uri);
       devcontainerUri = uri;
       break;
-    } catch {}
+    } catch { }
   }
 
   if (!devcontainerUri) {
@@ -39,7 +40,7 @@ export async function prepareLayout(memento: vscode.Memento) {
   }
 
   try {
-    const devcontainer = JSON.parse(fileContents);
+    const devcontainer = parse(fileContents);
     if (!devcontainer.workspace) {
       return;
     }
@@ -61,7 +62,7 @@ export async function prepareLayout(memento: vscode.Memento) {
 
     const isCodespaceActivation = memento && IS_CODESPACE;
     const workspaceConfig = devcontainer.workspace;
-    
+
     setTimeout(async () => {
       if (workspaceConfig.files) {
         createFiles(workspaceConfig.files);
@@ -73,11 +74,11 @@ export async function prepareLayout(memento: vscode.Memento) {
           if (view === "readme") {
             view = "workspace-layout.readme";
           }
-          
+
           if (view === "workspace-layout.readme") {
             await vscode.commands.executeCommand("setContext", "workspace-layout:showReadme", true)
           }
-          
+
           vscode.commands.executeCommand(`${view}.focus`);
         } catch {
           console.error("The configured view wasn't found: ", workspaceConfig.view)
@@ -102,7 +103,7 @@ export async function prepareLayout(memento: vscode.Memento) {
 
         createTerminals(workspaceConfig.terminals);
       }
-    }, isCodespaceActivation ? 5000: 0);
+    }, isCodespaceActivation ? 5000 : 0);
   } catch {
     console.error("Workspace layout configuration appears to be invalid JSON.");
   }

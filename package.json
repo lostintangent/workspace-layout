@@ -92,6 +92,7 @@
     "webpack-cli": "^4.8.0"
   },
   "dependencies": {
+    "jsonc-parser": "^3.0.0",
     "markdown-it": "^12.3.2"
   }
 }
