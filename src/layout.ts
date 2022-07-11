@@ -67,7 +67,7 @@ export async function prepareLayout(memento: vscode.Memento) {
     }
     else {
       if (!("view" in workspaceConfig)) {
-        workspaceConfig.view = "explorer";
+        workspaceConfig.view = "readme";
       }
       if (!("files" in workspaceConfig)) {
         workspaceConfig.files = [];
