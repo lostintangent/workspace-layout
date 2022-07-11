@@ -43,14 +43,15 @@ export async function activate(context: vscode.ExtensionContext) {
       const content = Markdoc.transform(ast, /* config */);
       const html = Markdoc.renderers.html(content);
 
-      webView.webview.html = `<html>
-<head>
-      <base href="${webView.webview.asWebviewUri(readmeUri)}" />
-</head>
-<body>
-${html}
-</body>
-</html>`;
+      webView.webview.html = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <base href="${webView.webview.asWebviewUri(readmeUri)}">
+          </head>
+          <body>${html}</body>
+        </html>`;
     }
   });
 
