@@ -1,3 +1,4 @@
+import Markdoc from "@markdoc/markdoc";
 import { TextDecoder } from "util";
 import * as vscode from "vscode";
 import { EXTENSION_NAME } from "./constants";
@@ -36,10 +37,11 @@ export async function activate(context: vscode.ExtensionContext) {
       }
 
       const bytes = await vscode.workspace.fs.readFile(readmeUri);
-      const contents = new TextDecoder().decode(bytes);
+      const markdown = new TextDecoder().decode(bytes);
 
-      const md = require("markdown-it")();
-      const html = md.render(contents);
+      const ast = Markdoc.parse(markdown);
+      const content = Markdoc.transform(ast, /* config */);
+      const html = Markdoc.renderers.html(content);
 
       webView.webview.html = `<html>
 <head>
