@@ -7,7 +7,7 @@ import { createTerminals } from "./terminals";
 import * as child_process from "child_process";
 
 const HAS_LAYOUT_CONTEXT_KEY = `${EXTENSION_NAME}:hasLayout`;
-const HAS_RUN_CONTEXT_KEY = `${EXTENSION_NAME}:hasRun`;
+const HAS_README_CONTEXT_KEY = `${EXTENSION_NAME}:hasReadme`;
 
 const settingsPaths = [
   ".vscode/settings.json",
@@ -57,7 +57,7 @@ export async function prepareLayout(memento: vscode.Memento) {
     const isCodespaceActivation = memento && IS_CODESPACE;
     let workspaceConfig = settings.workspace;
 
-    // Sensible defaults
+    // Defaults
     if (workspaceConfig === true) {
       workspaceConfig = {
         "view": "readme",
@@ -67,7 +67,7 @@ export async function prepareLayout(memento: vscode.Memento) {
     }
     else {
       if (!("view" in workspaceConfig)) {
-        workspaceConfig.view = "readme";
+        workspaceConfig.view = "explorer";
       }
       if (!("files" in workspaceConfig)) {
         workspaceConfig.files = [];
@@ -86,8 +86,15 @@ export async function prepareLayout(memento: vscode.Memento) {
           let view = workspaceConfig.view;
           if (view === "readme") {
             view = "workspace-layout.readme";
+            await vscode.commands.executeCommand(
+              "setContext",
+              HAS_README_CONTEXT_KEY,
+              true
+            );
           }
-          vscode.commands.executeCommand(`${view}.focus`);
+          if (view) {
+            vscode.commands.executeCommand(`${view}.focus`);
+          }
         } catch {
           console.error("The configured view wasn't found: ", workspaceConfig.view);
         }

@@ -42,7 +42,7 @@
       "view/title": [
         {
           "command": "workspace-layout.resetLayout",
-          "group": "navigation@1",
+          "group": "navigation",
           "when": "view == workspace-layout.readme"
         }
       ]
@@ -53,7 +53,7 @@
           "id": "workspace-layout.readme",
           "name": "",
           "type": "webview",
-          "when": "workspace-layout:hasLayout"
+          "when": "workspace-layout:hasReadme"
         }
       ]
     }
