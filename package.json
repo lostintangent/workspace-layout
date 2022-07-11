@@ -26,7 +26,7 @@
         "command": "workspace-layout.resetLayout",
         "enablement": "workspace-layout:hasLayout",
         "title": "Reset Workspace Layout",
-        "icon": "$(refresh)"
+        "icon": "$(layout-panel-right)"
       }
     ],
     "viewsContainers": {
