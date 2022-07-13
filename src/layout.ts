@@ -120,15 +120,8 @@ export async function prepareLayout(memento: vscode.Memento) {
         }
 
         if (workspaceConfig.browser) {
-          // Create a temporary document in a new column, since Simple Browser
-          // ends up in vscode.ViewColumn.Active
-          const document = await vscode.workspace.openTextDocument();
-          let editor = await vscode.window.showTextDocument(document, {
-            preserveFocus: false,
-            viewColumn: vscode.ViewColumn.Beside
-          });
-          await vscode.commands.executeCommand("simpleBrowser.show", workspaceConfig.browser);
-          await vscode.window.tabGroups.close(vscode.window.tabGroups.activeTabGroup.tabs[0]);
+          await vscode.commands.executeCommand("simpleBrowser.api.open",
+            vscode.Uri.parse(workspaceConfig.browser), { viewColumn: vscode.ViewColumn.Beside });
         }
 
         // Activate first editor in each group, from right to left
