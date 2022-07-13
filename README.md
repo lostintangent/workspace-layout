@@ -39,7 +39,8 @@ The following is an example `devcontainer.json` file, that illustrates the vario
         },
         "echo four"
       ]
-    ]
+    ],
+    "browser": "http://localhost:3000"
   }
 }
 ```
@@ -99,6 +100,16 @@ Whereas, the following would group the first two files into an editor group, and
 ### Selection
 
 In addition to opening files, you can also indicate whether to select a group of lines within a file, by appending `:<startLine>-<endLine>` to the file path (e.g. `foo.ts:10-30`). The ending line is optional, and if you omit it, then only a single line will be selected. Both the start and end lines are specified as 1-based integers, and so you can specify the line numbers as you see them within VS Code.
+
+## Browser
+
+If you'd like open a URL with VS Code's [Simple Browser](https://github.com/microsoft/vscode/pull/109276) extension (to the right of any code editors), you can include config like:
+
+```json
+"browser": "http://localhost:3000"
+```
+
+Note that the URL must allow iframing, else Simple Browser will appear blank.
 
 ## View
 

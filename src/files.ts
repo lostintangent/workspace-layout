@@ -1,11 +1,7 @@
 import { GalleryConfiguration } from "./types";
 import * as vscode from "vscode";
 
-async function openFile(
-  file: string,
-  viewColumn: vscode.ViewColumn,
-  preserveFocus: boolean = true
-) {
+async function openFile(file: string, viewColumn: vscode.ViewColumn) {
   const [path, range] = file.split(":");
   const fileUri = vscode.Uri.joinPath(
     vscode.workspace.workspaceFolders![0].uri,
@@ -20,46 +16,38 @@ async function openFile(
 
   return await vscode.window.showTextDocument(fileUri, {
     preview: false,
-    preserveFocus,
+    preserveFocus: false,
     viewColumn,
     selection
   });
 }
 
-export async function createFiles(files: string[]) {
+export async function createFiles(files: Array<any>) {
   await vscode.commands.executeCommand("workbench.action.closeAllEditors");
 
-  let viewColumn = 1;
-  let activeEditor;
+  const groups = toArrayOfArrays(files);
+  for (let i = 0; i < groups.length; i++) {
+    const editors = [];
+    for (let j = 0; j < groups[i].length; j++) {
+      await openFile(groups[i][j], i + 1);
+    }
+  }
+}
 
-  for (let i = 0; i < files.length; i++) {
-    const fileGroup = files[i];
-
-    if (Array.isArray(fileGroup)) {
-      fileGroup.reverse();
-
-      let file = fileGroup.pop();
-      const editor = await openFile(file, viewColumn, false);
-
-      if (!activeEditor) {
-        activeEditor = editor;
-      }
-
-      for (file of fileGroup) {
-        await openFile(file, viewColumn);
-      }
-
-      viewColumn++;
-    } else {
-      const editor = await openFile(fileGroup, viewColumn);
-
-      if (!activeEditor) {
-        activeEditor = editor;
+function toArrayOfArrays(items: Array<any>) {
+  const groups = [];
+  let group = [];
+  for (let i = 0; i < items.length; i++) {
+    if (Array.isArray(items[i])) {
+      groups.push(items[i]);
+    }
+    else {
+      group.push(items[i]);
+      if (i === items.length - 1 || (i === items.length - 2 && Array.isArray(items[i + 1]))) {
+        groups.push(group);
+        group = [];
       }
     }
   }
-
-  if (activeEditor) {
-    activeEditor.show();
-  }
+  return groups;
 }

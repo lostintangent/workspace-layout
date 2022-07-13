@@ -1,3 +1,4 @@
+import { parse } from "jsonc-parser";
 import { TextDecoder } from "util";
 import * as vscode from "vscode";
 import { EXTENSION_NAME, IS_CODESPACE } from "./constants";
@@ -6,9 +7,10 @@ import { createTerminals } from "./terminals";
 import * as child_process from "child_process";
 
 const HAS_LAYOUT_CONTEXT_KEY = `${EXTENSION_NAME}:hasLayout`;
-const HAS_RUN_CONTEXT_KEY = `${EXTENSION_NAME}:hasRun`;
+const HAS_README_CONTEXT_KEY = `${EXTENSION_NAME}:hasReadme`;
 
-const devcontainerPaths = [
+const settingsPaths = [
+  ".vscode/settings.json",
   ".devcontainer.json",
   ".devcontainer/devcontainer.json",
 ];
@@ -16,22 +18,22 @@ const devcontainerPaths = [
 export async function prepareLayout(memento: vscode.Memento) {
   const workspaceFolder = vscode.workspace.workspaceFolders![0];
 
-  let devcontainerUri: vscode.Uri | undefined;
-  for (let devcontainerPath of devcontainerPaths) {
-    const uri = vscode.Uri.joinPath(workspaceFolder.uri, devcontainerPath);
+  let settingsUri: vscode.Uri | undefined;
+  for (let settingsPath of settingsPaths) {
+    const uri = vscode.Uri.joinPath(workspaceFolder.uri, settingsPath);
 
     try {
       await vscode.workspace.fs.stat(uri);
-      devcontainerUri = uri;
+      settingsUri = uri;
       break;
-    } catch {}
+    } catch { }
   }
 
-  if (!devcontainerUri) {
+  if (!settingsUri) {
     return;
   }
 
-  const fileBytes = await vscode.workspace.fs.readFile(devcontainerUri);
+  const fileBytes = await vscode.workspace.fs.readFile(settingsUri);
   const fileContents = new TextDecoder().decode(fileBytes);
 
   if (!fileContents) {
@@ -39,8 +41,8 @@ export async function prepareLayout(memento: vscode.Memento) {
   }
 
   try {
-    const devcontainer = JSON.parse(fileContents);
-    if (!devcontainer.workspace) {
+    const settings = parse(fileContents);
+    if (!settings.workspace) {
       return;
     }
 
@@ -50,37 +52,51 @@ export async function prepareLayout(memento: vscode.Memento) {
         HAS_LAYOUT_CONTEXT_KEY,
         true
       );
-
-      const hasRun = memento.get(HAS_RUN_CONTEXT_KEY, false);
-      if (hasRun) {
-        return;
-      }
-
-      await memento.update(HAS_RUN_CONTEXT_KEY, true);
     }
 
     const isCodespaceActivation = memento && IS_CODESPACE;
-    const workspaceConfig = devcontainer.workspace;
-    
-    setTimeout(async () => {
-      if (workspaceConfig.files) {
-        createFiles(workspaceConfig.files);
-      }
+    let workspaceConfig = settings.workspace;
 
+    // Defaults
+    if (workspaceConfig === true) {
+      workspaceConfig = {
+        "view": "readme",
+        "files": [],
+        "terminals": [""]
+      };
+    }
+    else {
+      if (!("view" in workspaceConfig)) {
+        workspaceConfig.view = "readme";
+      }
+      if (!("files" in workspaceConfig)) {
+        workspaceConfig.files = [];
+      }
+      if (!("terminals" in workspaceConfig)) {
+        workspaceConfig.terminals = [""];
+      }
+      if (!("browser" in workspaceConfig)) {
+        workspaceConfig.browser = null;
+      }
+    }
+
+    setTimeout(async () => {
       if (workspaceConfig.view) {
         try {
-          let view = workspaceConfig.view
+          let view = workspaceConfig.view;
           if (view === "readme") {
             view = "workspace-layout.readme";
+            await vscode.commands.executeCommand(
+              "setContext",
+              HAS_README_CONTEXT_KEY,
+              true
+            );
           }
-          
-          if (view === "workspace-layout.readme") {
-            await vscode.commands.executeCommand("setContext", "workspace-layout:showReadme", true)
+          if (view) {
+            vscode.commands.executeCommand(`${view}.focus`);
           }
-          
-          vscode.commands.executeCommand(`${view}.focus`);
         } catch {
-          console.error("The configured view wasn't found: ", workspaceConfig.view)
+          console.error("The configured view wasn't found: ", workspaceConfig.view);
         }
       }
 
@@ -92,17 +108,30 @@ export async function prepareLayout(memento: vscode.Memento) {
             createTerminals(workspaceConfig.terminals);
             trustHandler.dispose();
           });
-
           return;
         }
-
         if (isCodespaceActivation) {
           child_process.execSync("touch $HOME/.config/vscode-dev-containers/first-run-notice-already-displayed");
         }
-
         createTerminals(workspaceConfig.terminals);
+
+        if (workspaceConfig.files) {
+          await createFiles(workspaceConfig.files);
+        }
+
+        if (workspaceConfig.browser) {
+          await vscode.commands.executeCommand("simpleBrowser.api.open",
+            vscode.Uri.parse(workspaceConfig.browser), { viewColumn: vscode.ViewColumn.Beside });
+        }
+
+        // Activate first editor in each group, from right to left
+        for (let i = vscode.window.tabGroups.all.length - 1; i >= 0; i--) {
+          const tabGroup = vscode.window.tabGroups.all[i];
+          const input = tabGroup.tabs[0].input as vscode.TabInputText;
+          vscode.window.showTextDocument(input.uri, { viewColumn: i + 1 });
+        }
       }
-    }, isCodespaceActivation ? 5000: 0);
+    }, isCodespaceActivation ? 5000 : 0);
   } catch {
     console.error("Workspace layout configuration appears to be invalid JSON.");
   }
