@@ -27,6 +27,10 @@
         "enablement": "workspace-layout:hasLayout",
         "title": "Reset Workspace Layout",
         "icon": "$(layout-panel-right)"
+      },
+      {
+        "command": "workspace-layout.openFolder",
+        "title": "Open Folder"
       }
     ],
     "viewsContainers": {
@@ -44,6 +48,13 @@
           "command": "workspace-layout.resetLayout",
           "group": "navigation",
           "when": "view == workspace-layout.readme"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "workspace-layout.openFolder",
+          "when": "explorerResourceIsFolder",
+          "group": "navigation@0"
         }
       ]
     },
