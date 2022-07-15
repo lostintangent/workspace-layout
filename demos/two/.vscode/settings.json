@@ -1,0 +1,10 @@
+{
+    "workspace": {
+        "files": [
+            "index.html",
+            "styles.css",
+            "scripts.js"
+        ],
+        "browser": true
+    }
+}

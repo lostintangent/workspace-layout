@@ -1,0 +1,11 @@
+{
+    "workspace": {
+        "files": [
+            "foo.c",
+            "bar.c",
+            [
+              "baz.c"
+            ]
+        ]
+    }
+}

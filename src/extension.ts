@@ -57,6 +57,15 @@ export async function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
+      `${EXTENSION_NAME}.openFolder`,
+      function (fileUri) {
+        vscode.commands.executeCommand("vscode.openFolder", fileUri, false);
+      }
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
       `${EXTENSION_NAME}.resetLayout`,
       prepareLayout
     )
