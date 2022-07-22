@@ -85,7 +85,8 @@ export async function prepareLayout(memento: vscode.Memento) {
         return;
       }
       if (isCodespaceActivation) {
-        child_process.execSync("touch $HOME/.config/vscode-dev-containers/first-run-notice-already-displayed");
+        // Commented out for now
+        // child_process.execSync("touch $HOME/.config/vscode-dev-containers/first-run-notice-already-displayed");
       }
       createTerminals(settings.terminals);
 
