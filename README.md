@@ -91,7 +91,7 @@ By default, the specified files will be opened as separate tabs within the same 
 "files": ["src/foo.ts", "src/bar.ts", "src/baz.ts"]
 ```
 
-Whereas, the following would group the first two files into an editor group, and then open the third one in a seperate editor group:
+Whereas, the following would group the first two files into an editor group, and then open the third one in a separate editor group:
 
 ```json
 "files": [["src/foo.ts", "src/bar.ts"], "src/baz.ts"]
